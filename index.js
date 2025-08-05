@@ -16,7 +16,7 @@ app.use(cors({
    credentials: true
 }));
 
-mongoose.connect('mongodb://localhost:27017/e-commerce')
+mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcydudb.mongodb.net/')
    .then((res) => {
       console.log("Data Base Connected");
    }).catch((err) => {

@@ -18,6 +18,10 @@ router.get('/', async (req, res) => {
      res.send("Api Working");
 })
 
+router.get('/ping', async(req, res)=>{
+     res.status(200).send("This is Check API");
+})
+
 
 // Authentication API
 

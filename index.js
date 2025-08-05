@@ -11,16 +11,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
 app.use(cors({
-   origin: 'http://localhost:5173',
+   // origin: 'http://localhost:5173',
    methods: ['GET', 'POST', 'PUT', 'DELETE'],
    credentials: true
 }));
 
-mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcydudb.mongodb.net/')
+mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcydudb.mongodb.net/data')
    .then((res) => {
       console.log("Data Base Connected");
    }).catch((err) => {
-      console.error("Error Message : ", err)
+      console.error("Error Message : ", err);
    })
 
 app.use('/', userRouter);

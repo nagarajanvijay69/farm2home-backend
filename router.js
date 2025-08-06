@@ -86,7 +86,7 @@ router.post('/signup', async (req, res) => {
           return res.cookie("token", token, {
                maxAge: 30 * 24 * 60 * 60 * 1000,
                httpOnly: true,
-               secure: false,
+               secure: true,
                sameSite: 'Lax'
           }).json({
                success: true,
@@ -135,7 +135,7 @@ router.post('/login', async (req, res) => {
           return res.cookie("token", token, {
                maxAge: 30 * 24 * 60 * 60 * 1000,
                httpOnly: true,
-               secure: false,
+               secure: true,
                sameSite: 'Lax'
           }).json({
                success: true,
@@ -214,7 +214,7 @@ router.patch('/reset', async (req, res) => {
           res.cookie("token", token, {
                maxAge: 30 * 24 * 60 * 60 * 1000,
                httpOnly: true,
-               secure: false,
+               secure: true,
                sameSite: 'Lax'
           });
           return res.status(200).json({
@@ -271,7 +271,7 @@ router.post('/mail', async (req, res) => {
      try {
           const transporter = mailer.createTransport({
                service: 'gmail',
-               secure: false,
+               secure: true,
                auth: {
                     user: 'nagarajanvijay46@gmail.com',
                     pass: 'gpvm eved fovd lrbp'

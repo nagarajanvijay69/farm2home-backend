@@ -12,12 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
 
 app.use(cors({
-  origin: [
-    "https://farm2home-frontend-puce.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+   origin: "https://farm2home-frontend-puce.vercel.app",
+   credentials: true,
+   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+   allowedHeaders: ["Content-Type", "Authorization"],
+   exposedHeaders: ["set-cookie"],
 }));
 
 mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcydudb.mongodb.net/data')

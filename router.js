@@ -168,7 +168,7 @@ router.get('/token', async (req, res) => {
      })
 
      try {
-          const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+          const verifyToken = jwt.verify(token, 'nagarajan@143');
           console.log("Verify Token " + verifyToken)
 
           if (!verifyToken) return res.status(401).json({

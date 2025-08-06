@@ -23,7 +23,7 @@ router.get('/ping', async(req, res)=>{
 
 // Authentication API
 
-router.get('/admin-login', async (req, res) => {
+router.post('/admin-login', async (req, res) => {
      const { email, password } = req.body;
      try {
           if (!email.trim() || !password.trim()) return res.status(404).json({
@@ -73,7 +73,7 @@ router.post('/signup', async (req, res) => {
 
      try {
           const hashPassword = await bcrypt.hash(password, 10);
-          const token = jwt.sign({ email }, process.env.SECRET_Key, { expiresIn: '1h' });
+          const token = jwt.sign({ email }, process.env.SECRET_Key, { expiresIn: '30d' });
 
           const user = new userModel({
                username,
@@ -87,7 +87,7 @@ router.post('/signup', async (req, res) => {
                maxAge: 30 * 24 * 60 * 60 * 1000,
                httpOnly: true,
                secure: true,
-               sameSite: 'Lax'
+               sameSite: 'none'
           }).json({
                success: true,
                message: 'User Created Successfully',
@@ -136,7 +136,7 @@ router.post('/login', async (req, res) => {
                maxAge: 30 * 24 * 60 * 60 * 1000,
                httpOnly: true,
                secure: true,
-               sameSite: 'Lax'
+               sameSite: 'none'
           }).json({
                success: true,
                message: 'User Login Successfully',
@@ -215,7 +215,7 @@ router.patch('/reset', async (req, res) => {
                maxAge: 30 * 24 * 60 * 60 * 1000,
                httpOnly: true,
                secure: true,
-               sameSite: 'Lax'
+               sameSite: 'none'
           });
           return res.status(200).json({
                success: true,

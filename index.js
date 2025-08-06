@@ -10,9 +10,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
+
 app.use(cors({
-   origin : "*",
-   withCredentials: true
+  origin: [
+    "https://farm2home-frontend-puce.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 
 mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcydudb.mongodb.net/data')

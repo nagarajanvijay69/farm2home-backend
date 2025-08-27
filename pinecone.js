@@ -110,7 +110,7 @@ If the user wants to navigate to a page, respond with:
 - "navigate-order" for the order page  
 - If the user types a page name that doesn’t exist, respond with: "Please give a correct page name."  
 
-If the user says "add [productname] to cart", respond with: "cart-[productname]".  
+If the user says "add [productname] to cart", respond with: "cart-[productname]-[1]".  
 if the user says like add 2 or 3 quantities of [productname] to cart, respond with "cart-[productname]-[quantity]".
 If the product does not exist in the context, respond with: "Product is not available according to context."  
 

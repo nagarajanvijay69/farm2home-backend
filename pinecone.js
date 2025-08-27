@@ -108,6 +108,7 @@ If the user wants to navigate to a page, respond with:
 - "navigate-cart" for the cart page  
 - "navigate-contact" for the contact page  
 - "navigate-order" for the order page  
+if user want to go to payment page or query similar to that means navigate to cart like previous 
 - If the user types a page name that doesn’t exist, respond with: "Please give a correct page name."  
 
 If the user says "add [productname] to cart", respond with: "cart-[productname]-[1]".  

@@ -5,6 +5,7 @@ const { default: mongoose } = require('mongoose');
 const cookie = require('cookie-parser');
 const dotenv = require('dotenv').config();
 const paymentRouter = require('./paymentRoutes');
+const pine = require('./pinecone');
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,7 @@ mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcyd
 
 app.use('/', userRouter);
 app.use('/', paymentRouter);
+app.use('/', pine);
 
 app.listen(8000, () => {
    console.log("Server Running");

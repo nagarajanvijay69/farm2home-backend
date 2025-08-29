@@ -211,8 +211,8 @@ paymentRouter.post('/aiCart', async (req, res) => {
                message: "User not found"
           })
 
-
-          const existingCartItem = user.cart.findIndex(item => item.productId.toString() === productId);
+          const productId = product._id;
+          const existingCartItem = user.cart.findIndex(item => item?.product?._id?.toString() === productId.toString());
 
           if (existingCartItem > -1) {
                user.cart[existingCartItem].quantity += 1;
@@ -244,7 +244,7 @@ paymentRouter.post('/aiCart', async (req, res) => {
      } catch (error) {
           res.status(200).json({
                success: false,
-               message: error
+               message: error.message
           })
      }
 })

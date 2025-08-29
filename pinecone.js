@@ -70,6 +70,7 @@ pine.post('/upload', async (req, res) => {
 
 pine.post('/query', async (req, res) => {
      const { query } = req.body;
+     // console.log("query", query);
      if (!query) {
           return res.status(400).send('Query is required');
      }
@@ -92,7 +93,7 @@ pine.post('/query', async (req, res) => {
 
           const prompt = `
           You are a helpful assistant.  
-
+If the user asks about not available products in the context means say like product-name not available yet. 
 If the user asks a question related to the given context, answer it properly and shortly with the exact answer from the context.  
 If the user asks something unrelated to the context, reply: "Don't ask questions unrelated to this Farm2Home webpage."  
 
@@ -108,17 +109,18 @@ If the user wants to navigate to a page, respond with:
 - "navigate-cart" for the cart page  
 - "navigate-contact" for the contact page  
 - "navigate-order" for the order page  
-if user want to go to payment page or query similar to that means navigate to cart like previous 
-- If the user types a page name that doesn’t exist, respond with: "Please give a correct page name."  
+ if user want to go to payment page or query similar to that means navigate to cart like previous 
+- If the user types a page name that doesn’t exist, respond with: "Unable to navigate this page."  
 
 If the user says "add [productname] to cart", respond with: "cart-[productname]-[1]".  
 if the user says like add 2 or 3 quantities of [productname] to cart, respond with "cart-[productname]-[quantity]".
-If the product does not exist in the context, respond with: "Product is not available according to context."  
+If the product does not exist in the context, respond with: "Product-name is not available yet." 
 
 if there is no related answer in the context, respond with: "Iam unable to answer this question."
 If the user asks "how many products", respond with the total number of products in the context.  
 
 Answer the question: ${query}\n\nContext:\n${context}\n\n`;
+
           const response = await llm.invoke(prompt)
           // console.log("LLM response:", response);
 

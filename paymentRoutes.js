@@ -189,4 +189,64 @@ paymentRouter.post('/status', async(req, res)=>{
     })
 })
 
+
+paymentRouter.post('/aiCart', async (req, res) => {
+     const { productName, userId, quantity } = req.body;
+     // console.log(productId, userId);
+
+     if (productName === '' || userId === '' || quantity === '') return res.status(200).json({
+          success: false,
+          message: "All fields are required"
+     })
+
+     try {
+          const product = await productModel.findOne({ name: productName });
+          if (!product) return res.status(200).json({
+               success: false,
+               message: "Product not found"
+          })
+          const user = await userModel.findById(userId);
+          if (!user) return res.status(200).json({
+               success: false,
+               message: "User not found"
+          })
+
+
+          const existingCartItem = user.cart.findIndex(item => item.productId.toString() === productId);
+
+          if (existingCartItem > -1) {
+               user.cart[existingCartItem].quantity += 1;
+          }
+          else {
+               user.cart.push({
+                    productId: product._id,
+                    name: product.name,
+                    category: product.category,
+                    discription: product.discription,
+                    offerPrice: product.offerPrice,
+                    price: product.price,
+                    imageOne: product.imageOne,
+                    imageTwo: product.imageTwo,
+                    imageThree: product.imageThree,
+                    imageFour: product.imageFour,
+                    isStock: product.isStock,
+                    quantity
+               });
+          }
+          user.markModified('cart');
+          await user.save();
+          return res.status(200).json({
+               success: true,
+               message: "Product added to cart successfully",
+               user,
+               cartItem: user.cart
+          })
+     } catch (error) {
+          res.status(200).json({
+               success: false,
+               message: error.message
+          })
+     }
+})
+
 module.exports = paymentRouter;

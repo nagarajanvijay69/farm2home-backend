@@ -20,6 +20,29 @@ router.get('/ping', async(req, res)=>{
      res.status(200).send("This is Check API");
 })
 
+router.post('/getId', async(req, res)=> {
+    const { productName } = req.body;
+    try {
+        const product = await productModel.findOne({ name: productName });
+        console.log(product);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            id: product._id
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
 
 // Authentication API
 

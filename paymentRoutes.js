@@ -212,10 +212,10 @@ paymentRouter.post('/aiCart', async (req, res) => {
           })
 
           const productId = product._id;
-          const existingCartItem = user.cart.findIndex(item => item?.product?._id?.toString() === productId.toString());
+          const existingCartItem = user.cart.findIndex(item => item.productId.toString() === productId.toString());
 
           if (existingCartItem > -1) {
-               user.cart[existingCartItem].quantity += 1;
+               user.cart[existingCartItem].quantity += Number(quantity);
           }
           else {
                user.cart.push({

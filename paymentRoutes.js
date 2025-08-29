@@ -244,7 +244,7 @@ paymentRouter.post('/aiCart', async (req, res) => {
      } catch (error) {
           res.status(200).json({
                success: false,
-               message: error.message
+               message: error
           })
      }
 })

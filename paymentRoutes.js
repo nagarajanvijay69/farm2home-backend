@@ -213,9 +213,9 @@ paymentRouter.post('/aiCart', async (req, res) => {
 
           const productId = product._id;
           const existingCartItem = user.cart.findIndex(item => item.productId.toString() === productId.toString());
-
+          console.log(existingCartItem)
           if (existingCartItem > -1) {
-               user.cart[existingCartItem].quantity += Number(quantity);
+               user.cart[existingCartItem].quantity = Number(user.cart[existingCartItem].quantity) + Number(quantity);
           }
           else {
                user.cart.push({
@@ -230,7 +230,7 @@ paymentRouter.post('/aiCart', async (req, res) => {
                     imageThree: product.imageThree,
                     imageFour: product.imageFour,
                     isStock: product.isStock,
-                    quantity
+                    quantity : Number(quantity)
                });
           }
           user.markModified('cart');

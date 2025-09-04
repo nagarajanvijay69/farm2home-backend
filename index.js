@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
 
 app.use(cors({
-   origin: ['https://farm2home-e2kl.onrender.com', 'http://localhost:5173'],
+   origin: 'https://farm2home-e2kl.onrender.com',
    credentials: true,
    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
    allowedHeaders: ["Content-Type", "Authorization"],

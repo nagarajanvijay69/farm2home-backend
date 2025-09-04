@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
 
 app.use(cors({
-   origin: ['https://farm2home-frontend-puce.vercel.app', 'http://localhost:8000'],
+   origin: ['https://farm2home-frontend-puce.vercel.app', 'http://localhost:5173'],
    credentials: true,
    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
    allowedHeaders: ["Content-Type", "Authorization"],

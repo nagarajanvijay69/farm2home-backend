@@ -249,4 +249,23 @@ paymentRouter.post('/aiCart', async (req, res) => {
      }
 })
 
+paymentRouter.put('/quantity', async(req, res)=>{
+        const {userId, index, quantity} = req.body;
+
+        if(userId == undefined || index == undefined || quantity == undefined) return res.json({
+            success : false,
+            message : "All fields are required"
+        })
+
+        const user = await userModel.findById(userId);
+        user.cart[index].quantity = quantity;
+        user.markModified('cart');
+        await user.save();
+
+        res.json({
+            success : true,
+            user
+        })
+})
+
 module.exports = paymentRouter;

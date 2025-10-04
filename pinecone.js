@@ -17,7 +17,7 @@ const index = pinecone.Index(`${process.env.PINECONE_INDEX}`);
 // Embedding setup to convert text to embeddings
 
 const embedding = new GoogleGenerativeAIEmbeddings({
-     model: 'gemini-embedding-001',
+     model: 'models/gemini-embedding-001',
      apiKey: process.env.GOOGLE_API_KEY,
 });
 
@@ -26,7 +26,7 @@ const embedding = new GoogleGenerativeAIEmbeddings({
 
 const llm = new ChatGoogleGenerativeAI({
      apiKey: process.env.GOOGLE_API_KEY,
-     model: 'gemini-2.5-flash',
+     model: 'gemini-2.5-flash-lite',
 });
 
 pine.get('/pine', async (req, res) => {

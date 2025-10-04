@@ -17,7 +17,7 @@ const index = pinecone.Index(`${process.env.PINECONE_INDEX}`);
 // Embedding setup to convert text to embeddings
 
 const embedding = new GoogleGenerativeAIEmbeddings({
-     model: 'text-embedding-004',
+     model: 'gemini-embedding-001',
      apiKey: process.env.GOOGLE_API_KEY,
 });
 

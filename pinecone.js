@@ -58,7 +58,7 @@ pine.post('/upload', async (req, res) => {
      try {
           await PineconeStore.fromDocuments(docs, embedding, {
                pineconeIndex: index,
-               namespace: 'Farm2Home',
+               namespace: 'gemini-embedding-001',
                textKey: 'text',
           });
      } catch (error) {
@@ -79,12 +79,12 @@ pine.post('/query', async (req, res) => {
 
           const store = await PineconeStore.fromExistingIndex(embedding, {
                pineconeIndex: index,
-               namespace: 'Farm2Home',
+               namespace: 'gemini-embedding-001',
                textKey: 'text',
           });
 
           const results = await store.similaritySearch(query, 5, {
-               namespace: 'Farm2Home',
+               namespace: 'gemini-embedding-001',
           });
           // console.log("Query results:", results);
 

@@ -13,7 +13,7 @@ const router = express.Router();
 
 
 router.get('/', async (req, res) => {
-     res.send("Api Working");
+     res.status(200).send("Api Working");
 })
 
 router.get('/ping', async(req, res)=>{

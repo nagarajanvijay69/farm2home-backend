@@ -1,7 +1,6 @@
 const { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } = require('@langchain/google-genai');
 const { PineconeStore } = require('@langchain/pinecone');
 const { Pinecone } = require('@pinecone-database/pinecone');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const express = require('express')
 
 

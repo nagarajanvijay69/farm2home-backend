@@ -25,7 +25,7 @@ mongoose.connect('mongodb+srv://nagarajanvijay69:nagarajanvijay...@cluster0.vcyd
       console.log("Data Base Connected");
    }).catch((err) => {
       console.error("Error Message : ", err);
-   })
+   });
 
 app.use('/', userRouter);
 app.use('/', paymentRouter);

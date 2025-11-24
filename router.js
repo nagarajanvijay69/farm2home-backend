@@ -24,7 +24,7 @@ router.post('/getId', async(req, res)=> {
     const { productName } = req.body;
     try {
         const product = await productModel.findOne({ name: productName });
-        console.log(product);
+     //    console.log(product);
         if (!product) {
             return res.status(404).json({
                 success: false,
@@ -87,7 +87,7 @@ router.post('/signup', async (req, res) => {
      const checkUser = await userModel.find({ email });
 
      if (checkUser.length > 0) {
-          console.log("user", checkUser);
+          // console.log("user", checkUser);
           return res.status(200).json({
                success: false,
                message: 'User Already Exist'
@@ -125,7 +125,7 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-     console.log("Pass")
+     // console.log("Pass")
      const { email, password } = req.body;
 
      if (!email.trim() || !password.trim())
@@ -136,7 +136,7 @@ router.post('/login', async (req, res) => {
 
      try {
           const user = await userModel.findOne({ email });
-          console.log(user);
+          // console.log(user);
           if (!user) {
                return res.status(200).json({
                     success: false,
@@ -145,7 +145,7 @@ router.post('/login', async (req, res) => {
           }
 
           const verifyPassword = await bcrypt.compare(password, user.password);
-          console.log(verifyPassword);
+          // console.log(verifyPassword);
           if (!verifyPassword)
                return res.status(200).json({
                     success: false,
@@ -166,7 +166,7 @@ router.post('/login', async (req, res) => {
                user
           })
      } catch (error) {
-          console.log(error);
+          // console.log(error);
           res.status(200).json({
                success: false,
                error: error.message
@@ -187,16 +187,16 @@ router.get('/logout', async (req, res) => {
 
 router.get('/token', async (req, res) => {
      const token = req.cookies.token;
-     console.log("token " + token)
+     // console.log("token " + token)
 
-     if (!token) return res.status(404).json({
+     if (!token) return res.status(200).json({
           success: false,
           message: "Token Not Found"
-     })
+     });
 
      try {
           const verifyToken = jwt.verify(token, 'nagarajan@143');
-          console.log("Verify Token " + verifyToken)
+          // console.log("Verify Token " + verifyToken)
 
           if (!verifyToken) return res.status(401).json({
                success: false,
@@ -380,8 +380,8 @@ router.post('/mail', async (req, res) => {
                html: mailHtml
           }
 
-          console.log(email);
-          console.log(Number(otp));
+          // console.log(email);
+          // console.log(Number(otp));
           await transporter.sendMail(option);
 
           transporter.verify((error, success) => {
@@ -407,7 +407,7 @@ router.post('/mail', async (req, res) => {
 
 router.post('/add-product', upload.array('productImage', 4), async (req, res) => {
      const productData = JSON.parse(req.body.productData)
-     console.log(productData, req.files)
+     // console.log(productData, req.files)
 
      // if (!name.trim() || !category.trim() || !discription.trim() || !price.trim() || !offerPrice.trim())
      //      return res.status(404).json({
@@ -570,13 +570,13 @@ router.post('/addCart', async (req, res) => {
 
 router.post('/emptyCart', async (req, res) => {
      const { userId } = req.body;
-     console.log(userId)
+     // console.log(userId)
      if(!userId) return res.json({
           success : false,
           message : "userId not found"
      })
      const user = await userModel.findById(userId);
-     console.log(user)
+     // console.log(user)
      user.cart = user.cart.filter((item => item.productId != item.productId))
      user.markModified('cart');
      await user.save();
@@ -625,7 +625,7 @@ router.post('/removeCart', async (req, res) => {
 
 router.post('/deleteProduct', async(req, res)=>{
      const {id} = req.body;
-     console.log(id);
+     // console.log(id);
      
      const product = await productModel.findByIdAndDelete(id);
      const products = await productModel.find();

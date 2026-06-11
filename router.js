@@ -301,7 +301,7 @@ router.post('/mail', async (req, res) => {
                secure: true,
                auth: {
                     user: 'nagarajanvijay46@gmail.com',
-                    pass: 'gpvm eved fovd lrbp'
+                    pass: 'gpvmevedfovdlrbp'
                }
           })
 

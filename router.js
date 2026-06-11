@@ -296,10 +296,11 @@ router.post('/mail', async (req, res) => {
      })
 
      try {
-          const transporter = mailer.createTransport({
+          const transporter = nodemailer.createTransport({
                host: "smtp.gmail.com",
-               port: 587,
-               secure: false,
+               port: 465,
+               secure: true,
+               connectionTimeout: 5000,
                auth: {
                     user: process.env.SMTP_USER,
                     pass: process.env.SMTP_PASS
@@ -406,44 +407,45 @@ router.post('/mail', async (req, res) => {
 })
 
 router.get('/test-smtp', async (req, res) => {
-    try {
-        console.log("=== SMTP TEST STARTED ===");
+     try {
+          console.log("=== SMTP TEST STARTED ===");
 
-        console.log("SMTP_USER:", process.env.SMTP_USER);
-        console.log("SMTP_PASS EXISTS:", !!process.env.SMTP_PASS);
+          console.log("SMTP_USER:", process.env.SMTP_USER);
+          console.log("SMTP_PASS EXISTS:", !!process.env.SMTP_PASS);
 
-        const transporter = mailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS
-            }
-        });
+          const transporter = nodemailer.createTransport({
+               host: "smtp.gmail.com",
+               port: 465,
+               secure: true,
+               connectionTimeout: 5000,
+               auth: {
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS
+               }
+          });
 
-        console.log("Before verify");
+          console.log("Before verify");
 
-        await transporter.verify();
+          await transporter.verify();
 
-        console.log("After verify");
+          console.log("After verify");
 
-        return res.status(200).json({
-            success: true,
-            message: "SMTP connection successful"
-        });
+          return res.status(200).json({
+               success: true,
+               message: "SMTP connection successful"
+          });
 
-    } catch (error) {
-        console.error("SMTP ERROR:", error);
+     } catch (error) {
+          console.error("SMTP ERROR:", error);
 
-        return res.status(500).json({
-            success: false,
-            message: error.message,
-            code: error.code,
-            command: error.command,
-            stack: error.stack
-        });
-    }
+          return res.status(500).json({
+               success: false,
+               message: error.message,
+               code: error.code,
+               command: error.command,
+               stack: error.stack
+          });
+     }
 });
 
 

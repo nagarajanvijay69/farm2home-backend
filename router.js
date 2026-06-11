@@ -298,8 +298,8 @@ router.post('/mail', async (req, res) => {
      try {
           const transporter = mailer.createTransport({
                host: "smtp.gmail.com",
-               port: 465,
-               secure: true,
+               port: 587,
+               secure: false,
                auth: {
                     user: 'nagarajanvijay46@gmail.com',
                     pass: 'gpvmevedfovdlrbp'

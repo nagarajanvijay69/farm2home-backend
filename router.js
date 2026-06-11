@@ -301,8 +301,8 @@ router.post('/mail', async (req, res) => {
                port: 587,
                secure: false,
                auth: {
-                    user: 'nagarajanvijay46@gmail.com',
-                    pass: 'gpvmevedfovdlrbp'
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS
                }
           });
 

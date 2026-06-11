@@ -16,31 +16,31 @@ router.get('/', async (req, res) => {
      res.status(200).send("Api Working");
 })
 
-router.get('/ping', async(req, res)=>{
+router.get('/ping', async (req, res) => {
      res.status(200).send("This is Check API");
 })
 
-router.post('/getId', async(req, res)=> {
-    const { productName } = req.body;
-    try {
-        const product = await productModel.findOne({ name: productName });
-     //    console.log(product);
-        if (!product) {
-            return res.status(404).json({
-                success: false,
-                message: "Product not found"
-            });
-        }
-        return res.status(200).json({
-            success: true,
-            id: product._id
-        });
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
+router.post('/getId', async (req, res) => {
+     const { productName } = req.body;
+     try {
+          const product = await productModel.findOne({ name: productName });
+          //    console.log(product);
+          if (!product) {
+               return res.status(404).json({
+                    success: false,
+                    message: "Product not found"
+               });
+          }
+          return res.status(200).json({
+               success: true,
+               id: product._id
+          });
+     } catch (error) {
+          return res.status(500).json({
+               success: false,
+               message: error.message
+          });
+     }
 });
 
 
@@ -297,13 +297,19 @@ router.post('/mail', async (req, res) => {
 
      try {
           const transporter = mailer.createTransport({
-               service: 'gmail',
+               host: "smtp.gmail.com",
+               port: 587,
                secure: true,
                auth: {
                     user: 'nagarajanvijay46@gmail.com',
                     pass: 'gpvmevedfovdlrbp'
                }
-          })
+          });
+
+          transporter.verify((error, success) => {
+               if (error) console.log(error);
+               else console.log("Server ready");
+          });
 
           const htmlTemplate = `
         <!DOCTYPE html>
@@ -384,10 +390,7 @@ router.post('/mail', async (req, res) => {
           // console.log(Number(otp));
           await transporter.sendMail(option);
 
-          transporter.verify((error, success) => {
-               if (error) console.log(error);
-               else console.log("Server ready");
-          })
+
 
           res.status(200).json({
                success: true,
@@ -426,11 +429,11 @@ router.post('/add-product', upload.array('productImage', 4), async (req, res) =>
           }
 
           const product = new productModel({
-               name : productData.name,
-               category : productData.category,
-               discription : productData.discription,
-               price : productData.price,
-               offerPrice : productData.offerPrice,
+               name: productData.name,
+               category: productData.category,
+               discription: productData.discription,
+               price: productData.price,
+               offerPrice: productData.offerPrice,
                imageOne: imgURL[0],
                imageTwo: imgURL[1],
                imageThree: imgURL[2],
@@ -571,9 +574,9 @@ router.post('/addCart', async (req, res) => {
 router.post('/emptyCart', async (req, res) => {
      const { userId } = req.body;
      // console.log(userId)
-     if(!userId) return res.json({
-          success : false,
-          message : "userId not found"
+     if (!userId) return res.json({
+          success: false,
+          message: "userId not found"
      })
      const user = await userModel.findById(userId);
      // console.log(user)
@@ -623,26 +626,26 @@ router.post('/removeCart', async (req, res) => {
 })
 
 
-router.post('/deleteProduct', async(req, res)=>{
-     const {id} = req.body;
+router.post('/deleteProduct', async (req, res) => {
+     const { id } = req.body;
      // console.log(id);
-     
+
      const product = await productModel.findByIdAndDelete(id);
      const products = await productModel.find();
      return res.json({
-          success : true,
-          message : "Product Deleted",
+          success: true,
+          message: "Product Deleted",
           products
      })
 })
 
 
-router.post('/address', async(req, res)=>{
-     const {address, userId} = req.body;
+router.post('/address', async (req, res) => {
+     const { address, userId } = req.body;
 
-     if(!address || !userId) return res.json({
-          success : false,
-          message : "All fields are required"
+     if (!address || !userId) return res.json({
+          success: false,
+          message: "All fields are required"
      })
 
      const user = await userModel.findById(userId);
@@ -650,31 +653,31 @@ router.post('/address', async(req, res)=>{
 
      await user.save();
      res.json({
-          success : true,
-          message : "Address Saved Successfully",
+          success: true,
+          message: "Address Saved Successfully",
           user
      })
 
 
 })
 
-router.post('/order', async(req, res)=>{
-     const {userId} = req.body;
+router.post('/order', async (req, res) => {
+     const { userId } = req.body;
 
-     if(!userId) return res.json({
-          success : false,
-          message : "UserId not found"
+     if (!userId) return res.json({
+          success: false,
+          message: "UserId not found"
      })
 
      const user = await userModel.findById(userId);
-     for(let i = 0; i < user.cart.length; i++){
+     for (let i = 0; i < user.cart.length; i++) {
           user.order = user.order.push(user.cart[i])
      }
 
      await user.save();
      res.json({
-          success : true,
-          message : "Saved"
+          success: true,
+          message: "Saved"
      })
 })
 

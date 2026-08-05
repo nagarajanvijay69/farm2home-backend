@@ -219,7 +219,7 @@ router.get('/token', async (req, res) => {
 })
 
 router.patch('/reset', async (req, res) => {
-     const { email, newPassword } = req.body;
+     const { email, password } = req.body;
      if (!email) return res.status(404).json({
           success: false,
           message: "Email Not found"
@@ -232,7 +232,7 @@ router.patch('/reset', async (req, res) => {
                success: false,
                message: "User Not found"
           })
-          const hashPassword = await bcrypt.hash(newPassword, 10);
+          const hashPassword = await bcrypt.hash(password, 10);
           user.password = hashPassword;
           await user.save();
 

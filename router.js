@@ -9,15 +9,6 @@ const upload = require('./cloudinary/multer');
 const cloudinary = require('./cloudinary/cloudinary');
 const orderModel = require('./orderModel');
 
-const SibApiV3Sdk = require("@getbrevo/brevo");
-
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-apiInstance.setApiKey(
-    SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
-    process.env.BREVO_API_KEY
-);
-
 const router = express.Router();
 
 
@@ -330,12 +321,8 @@ padding:20px 30px;
 border-radius:10px;
 box-shadow:0 0 10px rgba(0,0,0,.1);
 }
-.email-header{
-text-align:center;
-}
-.email-header h2{
-color:#2563eb;
-}
+.email-header{text-align:center;}
+.email-header h2{color:#2563eb;}
 .otp-box{
 font-size:28px;
 font-weight:bold;
@@ -360,21 +347,19 @@ margin-top:30px;
 
 <div class="email-header">
 <h2>OTP Verification</h2>
-<p>Please use the following One-Time Password (OTP) to continue your request:</p>
+<p>Please use the following OTP:</p>
 </div>
 
-<div style="text-align:center;">
+<div style="text-align:center">
 <div class="otp-box">{{otp}}</div>
 </div>
 
-<p style="text-align:center;">
-This code will expire in 30 minutes.
-Do not share it with anyone.
+<p style="text-align:center">
+This code expires in 30 minutes.
 </p>
 
 <div class="email-footer">
-If you didn't request this email, please ignore it.<br>
-&copy; 2025 Farm to Home
+© 2025 Farm to Home
 </div>
 
 </div>
@@ -387,24 +372,36 @@ If you didn't request this email, please ignore it.<br>
 
         const mailHtml = htmlTemplate.replace("{{otp}}", otp);
 
-        await apiInstance.sendTransacEmail({
-
-            sender: {
-                name: "Farm to Home",
-                email: "nagarajanvijay46@gmail.com"
+        const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+                "accept": "application/json",
+                "api-key": process.env.BREVO_API_KEY,
+                "content-type": "application/json"
             },
-
-            to: [
-                {
-                    email: email
-                }
-            ],
-
-            subject: "Verification OTP",
-
-            htmlContent: mailHtml
-
+            body: JSON.stringify({
+                sender: {
+                    name: "Farm to Home",
+                    email: "nagarajanvijay46@gmail.com"
+                },
+                to: [
+                    {
+                        email: email
+                    }
+                ],
+                subject: "Verification OTP",
+                htmlContent: mailHtml
+            })
         });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            return res.status(500).json({
+                success: false,
+                result
+            });
+        }
 
         return res.status(200).json({
             success: true,
@@ -412,14 +409,13 @@ If you didn't request this email, please ignore it.<br>
             otp
         });
 
-    }
-    catch (error) {
+    } catch (error) {
 
-        console.error(error);
+        console.log(error);
 
         return res.status(500).json({
             success: false,
-            message: error.message || "Failed to send email"
+            message: error.message
         });
 
     }
@@ -427,45 +423,60 @@ If you didn't request this email, please ignore it.<br>
 });
 
 router.get("/test-brevo", async (req, res) => {
+
     try {
 
-        await apiInstance.sendTransacEmail({
-
-            sender: {
-                name: "Farm to Home",
-                email: "nagarajanvijay46@gmail.com" // Must be verified in Brevo
+        const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+                "accept": "application/json",
+                "api-key": process.env.BREVO_API_KEY,
+                "content-type": "application/json"
             },
-
-            to: [
-                {
-                    email: "nagarajanvijay6380@gmail.com"
-                }
-            ],
-
-            subject: "Brevo API Test",
-
-            htmlContent: `
-                <h2>Brevo API Working!</h2>
-                <p>Your Render deployment can send emails successfully.</p>
-            `
+            body: JSON.stringify({
+                sender: {
+                    name: "Farm to Home",
+                    email: "nagarajanvijay46@gmail.com"
+                },
+                to: [
+                    {
+                        email: "nagarajanvijay6380@gmail.com"
+                    }
+                ],
+                subject: "Brevo API Test",
+                htmlContent: `
+                    <h2>Brevo API Working ✅</h2>
+                    <p>Your Render deployment can send emails successfully.</p>
+                `
+            })
         });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            return res.status(500).json({
+                success: false,
+                result
+            });
+        }
 
         return res.status(200).json({
             success: true,
-            message: "Test email sent successfully."
+            message: "Test email sent successfully",
+            result
         });
 
     } catch (error) {
 
-        console.error(error);
+        console.log(error);
 
         return res.status(500).json({
             success: false,
-            message: error.message,
-            response: error.response?.body || error.response
+            message: error.message
         });
 
     }
+
 });
 
 

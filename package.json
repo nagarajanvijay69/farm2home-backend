@@ -9,6 +9,7 @@
   "author": "nagarajan",
   "license": "ISC",
   "dependencies": {
+    "@getbrevo/brevo": "^6.0.2",
     "@langchain/google-genai": "^0.2.16",
     "@langchain/pinecone": "^0.2.0",
     "@pinecone-database/pinecone": "^5.1.2",

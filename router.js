@@ -9,6 +9,15 @@ const upload = require('./cloudinary/multer');
 const cloudinary = require('./cloudinary/cloudinary');
 const orderModel = require('./orderModel');
 
+const SibApiV3Sdk = require("@getbrevo/brevo");
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+apiInstance.setApiKey(
+    SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+    process.env.BREVO_API_KEY
+);
+
 const router = express.Router();
 
 
@@ -287,165 +296,176 @@ router.post('/check-email', async (req, res) => {
 })
 
 
-router.post('/mail', async (req, res) => {
-     const { email } = req.body;
+router.post("/mail", async (req, res) => {
 
-     if (!email) return res.status(404).json({
-          success: true,
-          message: "Email not found"
-     })
+    const { email } = req.body;
 
-     try {
-          const transporter = mailer.createTransport({
-               host: process.env.SMTP_SERVER,
-               port: process.env.SMTP_PORT,
-               secure: false,
-               connectionTimeout: 5000,
-               auth: {
-                    user: process.env.SMTP_USER,
-                    pass: process.env.SMTP_PASS
-               }
-          });
+    if (!email) {
+        return res.status(400).json({
+            success: false,
+            message: "Email is required"
+        });
+    }
 
-          transporter.verify((error, success) => {
-               if (error) console.log(error);
-               else console.log("Server ready");
-          });
+    try {
 
-          const htmlTemplate = `
-        <!DOCTYPE html>
+        const htmlTemplate = `
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>OTP Verification</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f3f4f6;
-        margin: 0;
-        padding: 0;
-      }
-      .email-container {
-        max-width: 500px;
-        margin: 30px auto;
-        background-color: #ffffff;
-        padding: 20px 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        color: #333;
-      }
-      .email-header {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .email-header h2 {
-        color: #2563eb;
-      }
-      .otp-box {
-        font-size: 28px;
-        font-weight: bold;
-        color: #1d4ed8;
-        background-color: #e0f2fe;
-        padding: 10px 20px;
-        display: inline-block;
-        border-radius: 8px;
-        margin: 20px 0;
-      }
-      .email-footer {
-        font-size: 12px;
-        color: #777;
-        text-align: center;
-        margin-top: 30px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="email-container">
-      <div class="email-header">
-        <h2>OTP Verification</h2>
-        <p>Please use the following One-Time Password (OTP) to continue your request:</p>
-      </div>
-      <div style="text-align: center;">
-        <div class="otp-box">{{otp}}</div>
-      </div>
-      <p style="text-align: center;">This code will expire in 30 min, Do not share it with anyone.</p>
-      <div class="email-footer">
-        If you didn't sign up, please ignore this email.<br />
-        &copy; 2025 Farm to Home
-      </div>
-    </div>
-  </body>
+<head>
+<meta charset="UTF-8">
+<title>OTP Verification</title>
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f3f4f6;
+margin:0;
+padding:0;
+}
+.email-container{
+max-width:500px;
+margin:30px auto;
+background:#fff;
+padding:20px 30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+.email-header{
+text-align:center;
+}
+.email-header h2{
+color:#2563eb;
+}
+.otp-box{
+font-size:28px;
+font-weight:bold;
+color:#1d4ed8;
+background:#e0f2fe;
+padding:10px 20px;
+display:inline-block;
+border-radius:8px;
+margin:20px 0;
+}
+.email-footer{
+font-size:12px;
+color:#777;
+text-align:center;
+margin-top:30px;
+}
+</style>
+</head>
+<body>
+
+<div class="email-container">
+
+<div class="email-header">
+<h2>OTP Verification</h2>
+<p>Please use the following One-Time Password (OTP) to continue your request:</p>
+</div>
+
+<div style="text-align:center;">
+<div class="otp-box">{{otp}}</div>
+</div>
+
+<p style="text-align:center;">
+This code will expire in 30 minutes.
+Do not share it with anyone.
+</p>
+
+<div class="email-footer">
+If you didn't request this email, please ignore it.<br>
+&copy; 2025 Farm to Home
+</div>
+
+</div>
+
+</body>
 </html>
-     `
-          const otp = Math.floor(Math.random() * 9000);
-          const mailHtml = htmlTemplate.replace('{{otp}}', otp);
+`;
 
-          const option = {
-               from: 'nagarajanvijay46@gmail.com',
-               to: email,
-               subject: "verification OTP",
-               html: mailHtml
-          }
+        const otp = Math.floor(1000 + Math.random() * 9000);
 
-          // console.log(email);
-          // console.log(Number(otp));
-          await transporter.sendMail(option);
+        const mailHtml = htmlTemplate.replace("{{otp}}", otp);
 
+        await apiInstance.sendTransacEmail({
 
+            sender: {
+                name: "Farm to Home",
+                email: "nagarajanvijay46@gmail.com"
+            },
 
-          res.status(200).json({
-               success: true,
-               message: "OTP send successfully",
-               otp
-          })
-     } catch (error) {
-          res.status(200).json({
-               message: error,
-               success: false
-          })
-     }
-})
+            to: [
+                {
+                    email: email
+                }
+            ],
 
-router.get('/test-smtp', async (req, res) => {
-     try {
-          console.log("=== SMTP TEST STARTED ===");
+            subject: "Verification OTP",
 
-          console.log("SMTP_USER:", process.env.SMTP_USER);
-          console.log("SMTP_PASS EXISTS:", !!process.env.SMTP_PASS);
+            htmlContent: mailHtml
 
-          const transporter = mailer.createTransport({
-               host: process.env.SMTP_SERVER,
-               port: process.env.SMTP_PORT,
-               secure: false,
-               connectionTimeout: 5000,
-               auth: {
-                    user: process.env.SMTP_USER,
-                    pass: process.env.SMTP_PASS
-               }
-          });
+        });
 
-          console.log("Before verify");
+        return res.status(200).json({
+            success: true,
+            message: "OTP sent successfully",
+            otp
+        });
 
-          await transporter.verify();
+    }
+    catch (error) {
 
-          console.log("After verify");
+        console.error(error);
 
-          return res.status(200).json({
-               success: true,
-               message: "SMTP connection successful"
-          });
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Failed to send email"
+        });
 
-     } catch (error) {
-          console.error("SMTP ERROR:", error);
+    }
 
-          return res.status(500).json({
-               success: false,
-               message: error.message,
-               code: error.code,
-               command: error.command,
-               stack: error.stack
-          });
-     }
+});
+
+router.get("/test-brevo", async (req, res) => {
+    try {
+
+        await apiInstance.sendTransacEmail({
+
+            sender: {
+                name: "Farm to Home",
+                email: "nagarajanvijay46@gmail.com" // Must be verified in Brevo
+            },
+
+            to: [
+                {
+                    email: "nagarajanvijay6380@gmail.com"
+                }
+            ],
+
+            subject: "Brevo API Test",
+
+            htmlContent: `
+                <h2>Brevo API Working!</h2>
+                <p>Your Render deployment can send emails successfully.</p>
+            `
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Test email sent successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+            response: error.response?.body || error.response
+        });
+
+    }
 });
 
 

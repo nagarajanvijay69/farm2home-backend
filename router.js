@@ -297,9 +297,9 @@ router.post('/mail', async (req, res) => {
 
      try {
           const transporter = mailer.createTransport({
-               host: "smtp.gmail.com",
-               port: 465,
-               secure: true,
+               host: process.env.SMTP_SERVER,
+               port: process.env.SMTP_PORT,
+               secure: false,
                connectionTimeout: 5000,
                auth: {
                     user: process.env.SMTP_USER,
@@ -414,9 +414,9 @@ router.get('/test-smtp', async (req, res) => {
           console.log("SMTP_PASS EXISTS:", !!process.env.SMTP_PASS);
 
           const transporter = mailer.createTransport({
-               host: "smtp.gmail.com",
-               port: 465,
-               secure: true,
+               host: process.env.SMTP_SERVER,
+               port: process.env.SMTP_PORT,
+               secure: false,
                connectionTimeout: 5000,
                auth: {
                     user: process.env.SMTP_USER,

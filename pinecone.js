@@ -112,10 +112,11 @@ pine.post('/query', async (req, res) => {
            if user want to go to payment page or query similar to that means navigate to cart like previous 
           - If the user types a page name that doesn’t exist, respond with: "Unable to navigate this page."  
 
-          If the user says "add [productname] to cart", respond with: "cart-[productname]-[1]".  
-          if the user says like add 2 or 3 quantities of [productname] to cart, respond with "cart-[productname]-[quantity]".
-          if user say like add all products into cart means response like "Unable to add all products to cart. add one by one."
-          If the product does not exist in the context, respond with: "Product-name is not available yet." 
+          If the user says "add [productname] to cart", respond with: "cart-[Exact Product Name From Context]-[1]".
+
+          If the user says "add 2 [productname] to cart", "add 3 [productname] to cart", or "add N [productname] to cart", respond with: "cart-[Exact Product Name From Context]-[quantity]".
+
+          Always use the product name exactly as it appears in the context, including uppercase and lowercase letters.
 
           if there is no related answer in the context, respond with: "Iam unable to answer this question."
           If the user asks "how many products", respond with the total number of products in the context.  
